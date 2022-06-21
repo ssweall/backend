@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
 import { IRole } from '../interfaces/IRole';
-import prismaContext from '../lib/prismaContext';
+import prismaContext from '../lib/prisma/prismaContext';
 
 export const createRole = async (userInput: IRole): Promise<Role> => {
   return prismaContext.prisma.role.create({
@@ -13,13 +13,33 @@ export const getAllRoles = async (): Promise<Role[]> => {
   return roles;
 };
 
+export const getFewRoles = async (
+  take: number,
+  skip: number
+): Promise<Role[]> => {
+  const roles = await prismaContext.prisma.role.findMany({
+    take: take,
+    skip: skip,
+  });
+  return roles;
+};
+
+export const getRole = async (id: string): Promise<Role | string | null> => {
+  const role = await prismaContext.prisma.role.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  if (role == null) return 'Role not found';
+  return role;
+};
+
 export const deleteRole = async (id: string): Promise<Role | string | null> => {
   const role = await prismaContext.prisma.role.delete({
     where: {
       id: id,
     },
   });
-
   if (role == null) return 'Role not found';
   return role;
 };

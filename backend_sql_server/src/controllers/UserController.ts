@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { IUser } from '../interfaces/IUser';
-import prismaContext from '../lib/prismaContext';
+import prismaContext from '../lib/prisma/prismaContext';
 
 export const createUser = async (userInput: IUser): Promise<User> => {
   return prismaContext.prisma.user.create({
@@ -58,3 +58,17 @@ export const getFewUsers = async (
   });
   return users;
 };
+
+// export const editUser = async (
+//   id: string,
+//   userInput: IUser
+// ): Promise<User | string | null> => {
+//   const user = await prismaContext.prisma.user.update({
+//     where: {
+//       id: id,
+//     },
+//     data: userInput,
+//   });
+//   if (user == null) return 'User not found';
+//   return user;
+// };

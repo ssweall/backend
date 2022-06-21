@@ -27,6 +27,7 @@
     "tedious": "^14.5.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.42",
     "prisma": "^3.15.1",
     "ts-node": "^10.8.1",
