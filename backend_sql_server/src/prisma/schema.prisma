@@ -13,7 +13,7 @@ datasource db {
 model User {
   id          String @id @default(cuid())
   name        String
-  email       String
+  email       String @unique
   password    String
   address     String?
   role        Role @relation(fields: [roleId],references: [id])
@@ -24,7 +24,7 @@ model User {
 
 model Role {
   id          String @id @default(cuid())
-  name        String
+  name        String @unique
   users       User[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
