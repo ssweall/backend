@@ -4,6 +4,9 @@ import controller from '../controllers/article';
 const router = express.Router();
 
 router.post('/create', controller.createArticle);
-router.get('/get', controller.getAllArticles);
+router.get('/getall', controller.getAllArticles);
+router.get('/getone/:id', controller.getOneArticle);
+router.post('/update/:id', controller.updateArticle);
+router.post('/delete/:id', controller.deleteArticle);
 
 export = router;
