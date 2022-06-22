@@ -3,8 +3,12 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import logging from './config/logging';
 import config from './config/config';
-import bookRoutes from './routes/book';
 import mongoose from 'mongoose';
+import ingredientRoutes from './routes/ingredient';
+import articleRoutes from './routes/article';
+import menuRoutes from './routes/menu';
+import restaurantRoutes from './routes/restaurant';
+import orderRoutes from './routes/order';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -59,7 +63,11 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-router.use('/api/books', bookRoutes);
+router.use('/api/ingredients', ingredientRoutes);
+router.use('/api/articles', articleRoutes);
+router.use('/api/menus', menuRoutes);
+router.use('/api/restaurants', restaurantRoutes);
+router.use('/api/orders', orderRoutes);
 
 /** Error handling */
 router.use((req, res, next) => {
