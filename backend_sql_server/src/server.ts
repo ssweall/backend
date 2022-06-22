@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 dotenv.config();
 
 const serverPort = process.env.SERVER_PORT;
+const cors = require('cors');
+app.use(cors({origin: '*'}));
 
 if (!serverPort) {
   console.log('❌ No Server port provided, update your .env file!');
