@@ -11,7 +11,8 @@ const MONGO_OPTIONS = {
   retryWrites: false,
 };
 
-const MONGO_HOST = process.env.MONGO_URL || `mongodb://localhost:27017`;
+const MONGO_HOST =
+  process.env.MONGO_URL || `mongodb://localhost:27017/CESIEats`;
 
 const MONGO = {
   host: MONGO_HOST,
