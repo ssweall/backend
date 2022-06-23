@@ -4,9 +4,9 @@ import controller from '../controllers/menu';
 const router = express.Router();
 
 router.post('/create', controller.createMenu);
-router.get('/getall', controller.getAllMenus);
-router.get('/getone/:id', controller.getOneMenu);
-router.post('/update/:id', controller.updateMenu);
-router.post('/delete/:id', controller.deleteMenu);
+router.get('/', controller.getAllMenus);
+router.get('/:id', controller.getOneMenu);
+router.put('/:id', controller.updateMenu);
+router.delete('/:id', controller.deleteMenu);
 
 export = router;

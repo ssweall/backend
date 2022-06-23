@@ -110,7 +110,7 @@ const deleteRestaurant = (req: Request, res: Response, next: NextFunction) => {
         });
       }
       return res.status(200).json({
-        restaurant: restaurant,
+        message: 'restaurant supprimé',
       });
     })
     .catch(error => {
