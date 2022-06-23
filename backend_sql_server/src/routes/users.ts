@@ -5,56 +5,53 @@ import {
   getAllUsers,
   getFewUsers,
   getUser,
+  getUserByEmail,
   updateUser,
 } from '../controllers/UserController';
 import { IUser } from '../interfaces/IUser';
 import { authenticateJWT } from '../lib/helper/auth';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt'
+import { User } from '@prisma/client';
 
 const router = express.Router();
 
 const accessTokenSecret = 'youraccesstokensecret';
 const refreshTokenSecret = 'yourrefreshtokensecrethere';
-const refreshTokens = [];
 
-const users = [
-  {
-      username: 'john',
-      password: 'password123admin',
-      role: 'admin'
-  }, {
-      username: 'anna',
-      password: 'password123member',
-      role: 'member'
-  }
-];
 
 router.get('/', authenticateJWT, async (req, res, next) => {
   const user = await getAllUsers();
   res.json(user);
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
+  try{
+    const { email, password } = req.body;
+    const user = await getUserByEmail(email);
+    if (user != null){
 
-  // read username and password from request body
-  const { username, password } = req.body;
+      const passwordValidate = await bcrypt.compare(password, user.password)
+      if (!passwordValidate){
+        res.json('Invalid password');
+      }
+      else{
 
-  // filter user from the users array by username and password
-  const user = users.find(u => { return u.username === username && u.password === password });
-
-  if (user) {
       // generate an access token
-      const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
-      const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
-
-      refreshTokens.push(refreshToken);
+      const accessToken = jwt.sign({ email: user.email, name: user.name }, accessTokenSecret, { expiresIn: '20m' });
+      const refreshToken = jwt.sign({ email: user.email, name: user.name }, refreshTokenSecret);
 
       res.json({
           accessToken,
           refreshToken
       });
-  } else {
-      res.send('Username or password incorrect');
+    }
+    }
+    else{
+      res.send('User not found');
+    }
+  }catch(err: any){
+    res.json(err)
   }
 });
 
@@ -62,14 +59,17 @@ router.post('/login', (req, res) => {
 router.post('/create', authenticateJWT, async (req, res, next) => {
   try {
     const userInput: IUser = req.body;
+
+    userInput.password = await bcrypt.hash(userInput.password, 10)
+
     const user = await createUser(userInput);
     res.json(user);
   } catch (err: any) {
     console.log(err.meta);
 
-    if (err.meta.field_name == 'User_roleId_fkey (index)')
+    if (err?.meta?.field_name == 'User_roleId_fkey (index)')
       res.json("User's role not found");
-    else if (err.meta.target == 'User_email_key')
+    else if (err?.meta?.target == 'User_email_key')
       res.json('User already exists');
     else res.json('Error when creating the user');
   }
