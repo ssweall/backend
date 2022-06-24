@@ -1,10 +1,10 @@
 import { Document } from 'mongoose';
-import IMenu from './menu';
+import IArticle from './article';
 
 type IRestaurant = {
   name: string;
   idRestaurateur: number;
-  menus: [IMenu['_id']];
+  articles: [IArticle['_id']];
   address: string;
 } & Document;
 export default IRestaurant;

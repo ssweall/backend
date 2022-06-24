@@ -1,15 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Restaurant from '../models/restaurant';
 
-const createRestaurant = (req: Request, res: Response, next: NextFunction) => {
-  const { name, idRestaurateur, menus, address } = req.body;
+const createRestaurant = (req: Request, res: Response) => {
+  const { name, idRestaurateur, articles, address } = req.body;
 
   const restaurant = new Restaurant({
     _id: new mongoose.Types.ObjectId(),
     name,
     idRestaurateur,
-    menus,
+    articles,
     address,
   });
 
@@ -28,7 +28,7 @@ const createRestaurant = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getAllRestaurants = (req: Request, res: Response, next: NextFunction) => {
+const getAllRestaurants = (req: Request, res: Response) => {
   Restaurant.find()
     .exec()
     .then(restaurants => {
@@ -46,7 +46,7 @@ const getAllRestaurants = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //find one restaurant
-const getOneRestaurant = (req: Request, res: Response, next: NextFunction) => {
+const getOneRestaurant = (req: Request, res: Response) => {
   const id = req.params.id;
   Restaurant.findById(id)
     .exec()
@@ -69,14 +69,14 @@ const getOneRestaurant = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //update one restaurant
-const updateRestaurant = (req: Request, res: Response, next: NextFunction) => {
+const updateRestaurant = (req: Request, res: Response) => {
   const id = req.params.id;
-  const { name, idRestaurateur, menus, address } = req.body;
+  const { name, idRestaurateur, articles, address } = req.body;
 
   Restaurant.findByIdAndUpdate(id, {
     name,
     idRestaurateur,
-    menus,
+    articles,
     address,
   })
     .exec()
@@ -99,7 +99,7 @@ const updateRestaurant = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //delete one restaurant
-const deleteRestaurant = (req: Request, res: Response, next: NextFunction) => {
+const deleteRestaurant = (req: Request, res: Response) => {
   const id = req.params.id;
   Restaurant.findByIdAndRemove(id)
     .exec()
