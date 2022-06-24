@@ -1,13 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Order from '../models/order';
 
-const createOrder = (req: Request, res: Response, next: NextFunction) => {
+const createOrder = (req: Request, res: Response) => {
   const {
     idClient,
     idRestaurant,
     idLivreur,
-    menus,
     articles,
     activeCodeSponsorship,
     state,
@@ -18,7 +17,6 @@ const createOrder = (req: Request, res: Response, next: NextFunction) => {
     idClient,
     idRestaurant,
     idLivreur,
-    menus,
     articles,
     activeCodeSponsorship,
     state,
@@ -39,7 +37,7 @@ const createOrder = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getAllOrders = (req: Request, res: Response, next: NextFunction) => {
+const getAllOrders = (req: Request, res: Response) => {
   Order.find()
     .exec()
     .then(orders => {
@@ -56,7 +54,7 @@ const getAllOrders = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const findOneOrder = (req: Request, res: Response, next: NextFunction) => {
+const findOneOrder = (req: Request, res: Response) => {
   const { id } = req.params;
 
   Order.findById(id)
@@ -80,13 +78,12 @@ const findOneOrder = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //update one order
-const updateOrder = (req: Request, res: Response, next: NextFunction) => {
+const updateOrder = (req: Request, res: Response) => {
   const id = req.params.id;
   const {
     idClient,
     idRestaurant,
     idLivreur,
-    menus,
     articles,
     activeCodeSponsorship,
     state,
@@ -96,7 +93,6 @@ const updateOrder = (req: Request, res: Response, next: NextFunction) => {
     idClient,
     idRestaurant,
     idLivreur,
-    menus,
     articles,
     activeCodeSponsorship,
     state,
@@ -121,7 +117,7 @@ const updateOrder = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //delete one order
-const deleteOrder = (req: Request, res: Response, next: NextFunction) => {
+const deleteOrder = (req: Request, res: Response) => {
   const id = req.params.id;
 
   Order.findByIdAndRemove(id)
