@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 
       const passwordValidate = await bcrypt.compare(password, user.password)
       if (!passwordValidate){
-        res.json('Invalid password');
+        res.status(203).json('Invalid password');
       }
       else{
 
@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
     }
     }
     else{
-      res.send('User not found');
+      res.status(203).send('User not found');
     }
   }catch(err: any){
     res.json(err)
@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.post('/create', authenticateJWT, async (req, res, next) => {
+router.post('/create', async (req, res, next) => {
   try {
     const userInput: IUser = req.body;
 
