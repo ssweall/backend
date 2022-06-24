@@ -3,7 +3,7 @@ import IMenu from './menu';
 
 type IRestaurant = {
   name: string;
-  idRestaurateur: number;
+  idRestaurateur: string;
   menus: [IMenu['_id']];
   address: string;
 } & Document;

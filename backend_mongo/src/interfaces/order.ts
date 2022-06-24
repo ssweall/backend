@@ -4,9 +4,9 @@ import IMenu from './menu';
 import IArticle from './article';
 
 type IOrder = {
-  idClient: number;
+  idClient: string;
   idRestaurant: IRestaurant['_id'];
-  idLivreur: number;
+  idLivreur: string;
   menus: [IMenu['_id']];
   articles: [IArticle['_id']];
   activeCodeSponsorship: boolean;

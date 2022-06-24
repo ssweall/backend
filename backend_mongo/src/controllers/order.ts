@@ -56,7 +56,30 @@ const getAllOrders = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const findOneOrder = (req: Request, res: Response, next: NextFunction) => {
+const findAllOrderByClient = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  Order.find({ idClient: id })
+    .exec()
+    .then(order => {
+      if (!order) {
+        return res.status(404).json({
+          message: 'Commandes non trouvées',
+        });
+      }
+      return res.status(200).json({
+        order: order,
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
+const findOneOrder = (req: Request, res: Response) => {
   const { id } = req.params;
 
   Order.findById(id)
@@ -150,4 +173,5 @@ export default {
   findOneOrder,
   updateOrder,
   deleteOrder,
+  findAllOrderByClient,
 };
