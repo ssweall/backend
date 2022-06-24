@@ -7,8 +7,7 @@ const ArticleSchema: Schema = new Schema(
     name: { type: String, required: true },
     type: { type: String, required: true },
     price: { type: Number, required: true },
-    ingredient: { type: [Schema.Types.ObjectId], required: true },
-    calories: { type: Number, required: true },
+    detail: { type: String, required: true },
     picture: { type: String, required: false },
   },
   {
