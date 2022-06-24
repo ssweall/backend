@@ -43,6 +43,17 @@ export const getUser = async (id: string): Promise<User | string | null> => {
   return user;
 };
 
+
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  const user = await prismaContext.prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  return user;
+};
+
 export const getAllUsers = async (): Promise<User[]> => {
   const users = await prismaContext.prisma.user.findMany();
   return users;
