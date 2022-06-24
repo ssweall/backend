@@ -1,17 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Article from '../models/article';
 
-const createArticle = (req: Request, res: Response, next: NextFunction) => {
-  const { name, type, price, ingredient, calories, picture } = req.body;
+const createArticle = (req: Request, res: Response) => {
+  const { name, type, price, detail, picture } = req.body;
 
   const article = new Article({
     _id: new mongoose.Types.ObjectId(),
     name,
     type,
     price,
-    ingredient,
-    calories,
+    detail,
     picture,
   });
 
@@ -30,7 +29,7 @@ const createArticle = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getAllArticles = (req: Request, res: Response, next: NextFunction) => {
+const getAllArticles = (req: Request, res: Response) => {
   Article.find()
     .exec()
     .then(articles => {
@@ -48,7 +47,7 @@ const getAllArticles = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //find one article
-const getOneArticle = (req: Request, res: Response, next: NextFunction) => {
+const getOneArticle = (req: Request, res: Response) => {
   Article.findById(req.params.id)
     .exec()
     .then(article => {
@@ -70,16 +69,15 @@ const getOneArticle = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //update one article
-const updateArticle = (req: Request, res: Response, next: NextFunction) => {
+const updateArticle = (req: Request, res: Response) => {
   const id = req.params.id;
-  const { name, type, price, ingredient, calories, picture } = req.body;
+  const { name, type, price, detail, picture } = req.body;
 
   Article.findByIdAndUpdate(id, {
     name,
     type,
     price,
-    ingredient,
-    calories,
+    detail,
     picture,
   })
     .exec()
@@ -102,7 +100,7 @@ const updateArticle = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //delete one article
-const deleteArticle = (req: Request, res: Response, next: NextFunction) => {
+const deleteArticle = (req: Request, res: Response) => {
   Article.findByIdAndRemove(req.params.id)
     .exec()
     .then(article => {

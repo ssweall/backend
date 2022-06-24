@@ -1,13 +1,11 @@
 import { Document } from 'mongoose';
 import IRestaurant from './restaurant';
-import IMenu from './menu';
 import IArticle from './article';
 
 type IOrder = {
   idClient: string;
   idRestaurant: IRestaurant['_id'];
   idLivreur: string;
-  menus: [IMenu['_id']];
   articles: [IArticle['_id']];
   activeCodeSponsorship: boolean;
   state: state;
