@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import articleRoutes from './routes/article';
 import restaurantRoutes from './routes/restaurant';
 import orderRoutes from './routes/order';
+import logRoutes from './routes/log';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -14,7 +15,7 @@ const router = express();
 /** Connect to Mongo */
 mongoose
   .connect(config.mongo.url, config.mongo.options)
-  .then(result => {
+  .then(() => {
     logging.info(NAMESPACE, 'Mongo Connected');
   })
   .catch(error => {
@@ -66,9 +67,10 @@ router.use('/api/articles', articleRoutes);
 
 router.use('/api/restaurants', restaurantRoutes);
 router.use('/api/orders', orderRoutes);
+router.use('/api/log', logRoutes);
 
 /** Error handling */
-router.use((req, res, next) => {
+router.use((req, res) => {
   const error = new Error('Not found');
 
   res.status(404).json({
