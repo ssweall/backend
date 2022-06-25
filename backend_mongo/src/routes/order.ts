@@ -7,6 +7,7 @@ router.post('/create', controller.createOrder);
 router.get('/', controller.getAllOrders);
 router.get('/:id', controller.findOneOrder);
 router.get('/client/:id', controller.findAllOrderByClient);
+router.get('/restaurant/:id', controller.findAllOrdersByRestaurateur);
 router.put('/:id', controller.updateOrder);
 router.delete('/:id', controller.deleteOrder);
 
