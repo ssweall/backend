@@ -19,6 +19,7 @@
     "@types/express": "^4.17.13",
     "@types/mssql": "^8.0.2",
     "@types/tedious": "^4.0.7",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -29,6 +30,7 @@
     "tedious": "^14.5.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.42",
     "prisma": "^3.15.1",
