@@ -3,7 +3,7 @@ import IArticle from './article';
 
 type IRestaurant = {
   name: string;
-  idRestaurateur: number;
+  idRestaurateur: string;
   articles: [IArticle['_id']];
   address: string;
 } & Document;
