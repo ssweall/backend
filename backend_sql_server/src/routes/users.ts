@@ -13,6 +13,8 @@ import { authenticateJWT } from '../lib/helper/auth';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 import { User } from '@prisma/client';
+import { getRole } from '../controllers/RoleController';
+import { IRole } from '../interfaces/IRole';
 
 const router = express.Router();
 
@@ -37,9 +39,10 @@ router.post('/login', async (req, res) => {
       }
       else{
 
+      const role = await getRole(user.roleId);
       // generate an access token
-      const accessToken = jwt.sign({ email: user.email, name: user.name }, accessTokenSecret, { expiresIn: '20m' });
-      const refreshToken = jwt.sign({ email: user.email, name: user.name }, refreshTokenSecret);
+      const accessToken = jwt.sign({ email: user?.email, name: user?.name, role: role?.name, userId: user?.id }, accessTokenSecret, { expiresIn: '1d' });
+      const refreshToken = jwt.sign({ email: user?.email, name: user?.name, role: role?.name, userId: user?.id }, refreshTokenSecret);
 
       res.json({
           accessToken,

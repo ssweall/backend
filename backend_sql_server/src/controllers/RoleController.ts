@@ -24,13 +24,13 @@ export const getFewRoles = async (
   return roles;
 };
 
-export const getRole = async (id: string): Promise<Role | string | null> => {
+export const getRole = async (id: string): Promise<Role | null> => {
   const role = await prismaContext.prisma.role.findUnique({
     where: {
       id: id,
     },
   });
-  if (role == null) return 'Role not found';
+  // if (role == null) return 'Role not found';
   return role;
 };
 

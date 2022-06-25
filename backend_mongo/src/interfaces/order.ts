@@ -3,9 +3,9 @@ import IRestaurant from './restaurant';
 import IArticle from './article';
 
 type IOrder = {
-  idClient: number;
+  idClient: string;
   idRestaurant: IRestaurant['_id'];
-  idLivreur: number;
+  idLivreur: string;
   articles: [IArticle['_id']];
   activeCodeSponsorship: boolean;
   state: state;

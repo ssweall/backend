@@ -5,7 +5,7 @@ import IRestaurant from '../interfaces/restaurant';
 const RestaurantSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
-    idRestaurateur: { type: Number, required: true },
+    idRestaurateur: { type: String, required: true },
     articles: { type: [Schema.Types.ObjectId], required: true },
     address: { type: String, required: true },
   },

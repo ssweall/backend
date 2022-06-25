@@ -4,9 +4,9 @@ import IOrder from '../interfaces/order';
 
 const OrderSchema: Schema = new Schema(
   {
-    idClient: { type: Number, required: true },
+    idClient: { type: String, required: true },
     idRestaurant: { type: Schema.Types.ObjectId, required: true },
-    idLivreur: { type: Number, required: false },
+    idLivreur: { type: String, required: false },
     articles: { type: [Schema.Types.ObjectId], required: false },
     activeCodeSponsorship: { type: Boolean, required: true },
     state: {
