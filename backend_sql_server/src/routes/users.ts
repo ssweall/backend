@@ -37,13 +37,39 @@ router.post('/login', async (req, res) => {
       } else {
         const roles = await getAllRoles();
         const roleUser = roles.find(r => r.id === user.roleId);
+        if (roleId != undefined) {
+          if (roleUser?.name != roleId) {
+            res
+              .status(203)
+              .json("Vous n'avez pas les droits pour vous connecter.");
+          } else {
+            // generate an access token
+            const accessToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              accessTokenSecret,
+              { expiresIn: '1d' }
+            );
+            const refreshToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              refreshTokenSecret
+            );
 
-        if (roleUser?.name != roleId) {
-          res
-            .status(203)
-            .json("Vous n'avez pas les droits pour vous connecter.");
+            res.json({
+              accessToken,
+              refreshToken,
+            });
+          }
         } else {
-          // generate an access token
           const accessToken = jwt.sign(
             {
               email: user?.email,
