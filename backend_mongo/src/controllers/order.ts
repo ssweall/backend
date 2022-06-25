@@ -57,7 +57,29 @@ const getAllOrders = (req: Request, res: Response) => {
 const findAllOrderByClient = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  Order.find({ idClient: id })
+  Order.find({ idClient: id }).populate("idRestaurant").populate("articles")
+    .exec()
+    .then(order => {
+      if (!order) {
+        return res.status(404).json({
+          message: 'Commandes non trouvées',
+        });
+      }
+      return res.status(200).json({
+        order: order,
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
+const findAllOrdersByRestaurateur = (req: Request, res: Response) => {
+  const { id } = req.params;
+  Order.find({ idRestaurant: { idRestaurateur: id}}).populate("idRestaurant").populate("articles")
     .exec()
     .then(order => {
       if (!order) {
@@ -170,4 +192,5 @@ export default {
   updateOrder,
   deleteOrder,
   findAllOrderByClient,
+  findAllOrdersByRestaurateur,
 };
