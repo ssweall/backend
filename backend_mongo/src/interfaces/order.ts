@@ -17,4 +17,5 @@ enum state {
   commande = 'commande',
   preparation = 'preparation',
   prepared = 'prepared',
+  livraison = 'livraison',
 }
