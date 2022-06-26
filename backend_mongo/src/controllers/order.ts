@@ -57,7 +57,9 @@ const getAllOrders = (req: Request, res: Response) => {
 const findAllOrderByClient = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  Order.find({ idClient: id }).populate("idRestaurant").populate("articles")
+  Order.find({ idClient: id })
+    .populate('idRestaurant')
+    .populate('articles')
     .exec()
     .then(order => {
       if (!order) {
@@ -77,9 +79,61 @@ const findAllOrderByClient = (req: Request, res: Response) => {
     });
 };
 
-const findAllOrdersByRestaurateur = (req: Request, res: Response) => {
+const findAllOrdersByLivreur = (req: Request, res: Response) => {
   const { id } = req.params;
-  Order.find({ idRestaurant: { idRestaurateur: id}}).populate("idRestaurant").populate("articles")
+
+  Order.find({ idLivreur: id })
+    .populate('idRestaurant')
+    .populate('articles')
+    .exec()
+    .then(order => {
+      if (!order) {
+        return res.status(404).json({
+          message: 'Commandes non trouvées',
+        });
+      }
+      return res.status(200).json({
+        order: order,
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
+const findAllOrdersByStatus = (req: Request, res: Response) => {
+  const { status } = req.params;
+
+  Order.find({ state: status })
+    .populate('idRestaurant')
+    .populate('articles')
+    .exec()
+    .then(order => {
+      if (!order) {
+        return res.status(404).json({
+          message: 'Commandes non trouvées',
+        });
+      }
+      return res.status(200).json({
+        order: order,
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
+const findAllOrdersByRestaurant = (req: Request, res: Response) => {
+  const { id } = req.params;
+  Order.find({ idRestaurant: id })
+    .populate('idRestaurant')
+    .populate('articles')
     .exec()
     .then(order => {
       if (!order) {
@@ -192,5 +246,7 @@ export default {
   updateOrder,
   deleteOrder,
   findAllOrderByClient,
-  findAllOrdersByRestaurateur,
+  findAllOrdersByRestaurant,
+  findAllOrdersByLivreur,
+  findAllOrdersByStatus,
 };
