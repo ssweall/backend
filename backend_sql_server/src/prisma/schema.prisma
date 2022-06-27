@@ -11,21 +11,25 @@ datasource db {
 }
 
 model User {
-  id          String @id @default(cuid())
-  name        String
-  email       String @unique
-  password    String
-  address     String?
-  role        Role @relation(fields: [roleId],references: [id])
-  roleId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  streetNumber Int?
+  address      String?
+  city         String?
+  phoneNumber  String?
+  country      String?
+  role         Role     @relation(fields: [roleId], references: [id])
+  roleId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 }
 
 model Role {
-  id          String @id @default(cuid())
-  name        String @unique
-  users       User[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String   @unique
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
