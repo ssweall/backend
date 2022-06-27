@@ -106,7 +106,14 @@ router.post('/login', async (req, res) => {
 
 router.post('/create', async (req, res, next) => {
   try {
-    const userInput: IUser = req.body;
+    const userInput: IUser = {
+      name: req.body.name,
+      email: req.body.email,
+      roleId: req.body.roleId,
+      password: req.body.password,
+      address: req.body.address,
+    };
+    console.log(userInput);
 
     userInput.password = await bcrypt.hash(userInput.password, 10);
 
@@ -134,6 +141,9 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 
 router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
+    console.log(req.body);
+    console.log(req.params.id);
+
     const user = await updateUser(req.params.id, req.body);
     res.json(user);
   } catch (err) {
