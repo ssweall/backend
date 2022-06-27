@@ -5,10 +5,18 @@ import IOrder from '../interfaces/order';
 const OrderSchema: Schema = new Schema(
   {
     idClient: { type: String, required: true },
-    idRestaurant: { type: Schema.Types.ObjectId, required: true, ref: 'Restaurant' },
+    idRestaurant: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Restaurant',
+    },
     idLivreur: { type: String, required: false },
-    articles: { type: [Schema.Types.ObjectId], required: false, ref: 'Article' },
-    activeCodeSponsorship: { type: Boolean, required: true },
+    articles: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      ref: 'Article',
+    },
+    activeCodeSponsorship: { type: Boolean, required: false },
     state: {
       type: String,
       enum: ['commande', 'preparation', 'prepared'],
