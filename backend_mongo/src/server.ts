@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import http from 'http';
 import bodyParser from 'body-parser';
 import express from 'express';
 import logging from './config/logging';
 import config from './config/config';
 import mongoose from 'mongoose';
-import ingredientRoutes from './routes/ingredient';
 import articleRoutes from './routes/article';
-import menuRoutes from './routes/menu';
 import restaurantRoutes from './routes/restaurant';
 import orderRoutes from './routes/order';
 
@@ -63,9 +62,7 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-router.use('/api/ingredients', ingredientRoutes);
 router.use('/api/articles', articleRoutes);
-router.use('/api/menus', menuRoutes);
 router.use('/api/restaurants', restaurantRoutes);
 router.use('/api/orders', orderRoutes);
 

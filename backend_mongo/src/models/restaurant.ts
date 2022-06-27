@@ -6,7 +6,7 @@ const RestaurantSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     idRestaurateur: { type: Number, required: true },
-    articles: { type: [Schema.Types.ObjectId], required: true },
+    articles: { type: [Schema.Types.ObjectId], required: false },
     address: { type: String, required: true },
   },
   {
