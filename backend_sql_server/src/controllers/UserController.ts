@@ -28,6 +28,8 @@ export const updateUser = async (
     },
     data: userInput,
   });
+  console.log(user);
+
   if (user == null) return 'User not found';
   return user;
 };
