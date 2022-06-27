@@ -11,14 +11,15 @@ import {
 import { IUser } from '../interfaces/IUser';
 import { authenticateJWT } from '../lib/helper/auth';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
+import { getAllRoles, getRole } from '../controllers/RoleController';
+import { IRole } from '../interfaces/IRole';
 
 const router = express.Router();
 
 const accessTokenSecret = 'youraccesstokensecret';
 const refreshTokenSecret = 'yourrefreshtokensecrethere';
-
 
 router.get('/', authenticateJWT, async (req, res, next) => {
   const user = await getAllUsers();
@@ -26,41 +27,88 @@ router.get('/', authenticateJWT, async (req, res, next) => {
 });
 
 router.post('/login', async (req, res) => {
-  try{
-    const { email, password } = req.body;
+  try {
+    const { email, password, roleId } = req.body;
     const user = await getUserByEmail(email);
-    if (user != null){
-
-      const passwordValidate = await bcrypt.compare(password, user.password)
-      if (!passwordValidate){
+    if (user != null) {
+      const passwordValidate = await bcrypt.compare(password, user.password);
+      if (!passwordValidate) {
         res.status(203).json('Invalid password');
+      } else {
+        const roles = await getAllRoles();
+        const roleUser = roles.find(r => r.id === user.roleId);
+        if (roleId != undefined) {
+          if (roleUser?.name != roleId) {
+            res
+              .status(203)
+              .json("Vous n'avez pas les droits pour vous connecter.");
+          } else {
+            // generate an access token
+            const accessToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              accessTokenSecret,
+              { expiresIn: '1d' }
+            );
+            const refreshToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              refreshTokenSecret
+            );
+
+            res.json({
+              accessToken,
+              refreshToken,
+            });
+          }
+        } else {
+          const accessToken = jwt.sign(
+            {
+              email: user?.email,
+              name: user?.name,
+              role: roleUser?.name,
+              userId: user?.id,
+            },
+            accessTokenSecret,
+            { expiresIn: '1d' }
+          );
+          const refreshToken = jwt.sign(
+            {
+              email: user?.email,
+              name: user?.name,
+              role: roleUser?.name,
+              userId: user?.id,
+            },
+            refreshTokenSecret
+          );
+
+          res.json({
+            accessToken,
+            refreshToken,
+          });
+        }
       }
-      else{
-
-      // generate an access token
-      const accessToken = jwt.sign({ email: user.email, name: user.name }, accessTokenSecret, { expiresIn: '20m' });
-      const refreshToken = jwt.sign({ email: user.email, name: user.name }, refreshTokenSecret);
-
-      res.json({
-          accessToken,
-          refreshToken
-      });
-    }
-    }
-    else{
+    } else {
       res.status(203).send('User not found');
     }
-  }catch(err: any){
-    res.json(err)
+  } catch (err: any) {
+    res.json(err);
   }
 });
-
 
 router.post('/create', async (req, res, next) => {
   try {
     const userInput: IUser = req.body;
 
-    userInput.password = await bcrypt.hash(userInput.password, 10)
+    userInput.password = await bcrypt.hash(userInput.password, 10);
 
     const user = await createUser(userInput);
     res.json(user);
