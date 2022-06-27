@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import http from 'http';
 import bodyParser from 'body-parser';
 import express from 'express';
@@ -62,9 +63,7 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-
 router.use('/api/articles', articleRoutes);
-
 router.use('/api/restaurants', restaurantRoutes);
 router.use('/api/orders', orderRoutes);
 router.use('/api/logs', logRoutes);

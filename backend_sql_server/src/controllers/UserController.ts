@@ -43,7 +43,6 @@ export const getUser = async (id: string): Promise<User | string | null> => {
   return user;
 };
 
-
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await prismaContext.prisma.user.findUnique({
     where: {

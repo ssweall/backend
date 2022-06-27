@@ -19,7 +19,7 @@ const OrderSchema: Schema = new Schema(
     activeCodeSponsorship: { type: Boolean, required: false },
     state: {
       type: String,
-      enum: ['commande', 'preparation', 'prepared'],
+      enum: ['commande', 'preparation', 'livraison', 'prepared'],
       required: true,
     },
   },
@@ -29,7 +29,7 @@ const OrderSchema: Schema = new Schema(
 );
 
 OrderSchema.post<IOrder>('save', function () {
-  logging.info('Mongo', 'Checkout the rrder we just saved: ', this);
+  logging.info('Mongo', 'Checkout the order we just saved: ', this);
 });
 
 export default mongoose.model<IOrder>('Order', OrderSchema);

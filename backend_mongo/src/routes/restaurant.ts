@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/create', controller.createRestaurant);
 router.get('/', controller.getAllRestaurants);
 router.get('/:id', controller.getOneRestaurant);
+router.get('/restaurateur/:id', controller.getAllRestaurantsByRestaurateur);
 router.put('/:id', controller.updateRestaurant);
 router.delete('/:id', controller.deleteRestaurant);
 

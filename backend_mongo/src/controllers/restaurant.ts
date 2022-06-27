@@ -45,6 +45,25 @@ const getAllRestaurants = (req: Request, res: Response) => {
     });
 };
 
+
+const getAllRestaurantsByRestaurateur = (req: Request, res: Response) => {
+  const {id} = req.params;
+  Restaurant.find({idRestaurateur: id}).populate("articles")
+    .exec()
+    .then(restaurants => {
+      return res.status(200).json({
+        restaurants: restaurants,
+        count: restaurants.length,
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
 //find one restaurant
 const getOneRestaurant = (req: Request, res: Response) => {
   const id = req.params.id;
@@ -127,4 +146,5 @@ export default {
   getOneRestaurant,
   updateRestaurant,
   deleteRestaurant,
+  getAllRestaurantsByRestaurateur,
 };
