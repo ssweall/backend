@@ -8,10 +8,7 @@ const ArticleSchema: Schema = new Schema(
     type: { type: String, required: true },
     price: { type: Number, required: true },
     detail: { type: String, required: true },
-    picture: {
-      data: Buffer,
-      contentType: String,
-    },
+    picture: { type: String, required: true },
   },
   {
     timestamps: true,
