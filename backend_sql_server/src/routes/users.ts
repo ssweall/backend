@@ -6,6 +6,7 @@ import {
   getFewUsers,
   getUser,
   getUserByEmail,
+  getUsersByRole,
   updateUser,
 } from '../controllers/UserController';
 import { IUser } from '../interfaces/IUser';
@@ -106,15 +107,24 @@ router.post('/login', async (req, res) => {
 
 router.post('/create', async (req, res, next) => {
   try {
-    const userInput: IUser = req.body;
+    const userInput: IUser = {
+      name: req.body.name,
+      email: req.body.email,
+      roleId: req.body.roleId,
+      password: req.body.password,
+      address: req.body?.address,
+      streetNumber: parseInt(req.body?.streetNumber),
+      city: req.body?.city,
+      country: req.body?.country,
+      phoneNumber: req.body?.phoneNumber,
+      sponsorshipCode: req.body?.sponsorshipCode,
+    };
 
     userInput.password = await bcrypt.hash(userInput.password, 10);
 
     const user = await createUser(userInput);
     res.json(user);
   } catch (err: any) {
-    console.log(err.meta);
-
     if (err?.meta?.field_name == 'User_roleId_fkey (index)')
       res.json("User's role not found");
     else if (err?.meta?.target == 'User_email_key')
@@ -134,7 +144,20 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 
 router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
-    const user = await updateUser(req.params.id, req.body);
+    const userInput: IUser = {
+      name: req.body.name,
+      email: req.body.email,
+      roleId: req.body.roleId,
+      password: req.body.password,
+      address: req.body?.address,
+      streetNumber: parseInt(req.body?.streetNumber),
+      city: req.body?.city,
+      country: req.body?.country,
+      phoneNumber: req.body?.phoneNumber,
+      sponsorshipCode: req.body?.sponsorshipCode,
+    };
+
+    const user = await updateUser(req.params.id, userInput);
     res.json(user);
   } catch (err) {
     res.json(err);
@@ -161,6 +184,15 @@ router.delete('/:id', authenticateJWT, async (req, res, next) => {
     res.json(user);
   } catch (err) {
     res.json('User does not exist');
+  }
+});
+
+router.get('/get/role/:idRoles', authenticateJWT, async (req, res, next) => {
+  try {
+    const usersByRole = await getUsersByRole(req.params.idRoles);
+    res.json(usersByRole);
+  } catch (err) {
+    res.json(err);
   }
 });
 

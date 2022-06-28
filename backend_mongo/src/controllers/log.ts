@@ -28,6 +28,7 @@ const createLog = (req: Request, res: Response) => {
 
 const getAllLogs = (req: Request, res: Response) => {
   Log.find()
+    .sort({ createdAt: -1 })
     .exec()
     .then(logs => {
       return res.status(200).json({

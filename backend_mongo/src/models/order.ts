@@ -16,7 +16,7 @@ const OrderSchema: Schema = new Schema(
       required: false,
       ref: 'Article',
     },
-    activeCodeSponsorship: { type: Boolean, required: true },
+    activeCodeSponsorship: { type: Boolean, required: false },
     state: {
       type: String,
       enum: ['commande', 'preparation', 'livraison', 'prepared'],

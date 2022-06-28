@@ -20,6 +20,7 @@ model User {
   city         String?
   phoneNumber  String?
   country      String?
+  sponsorshipCode String?
   role         Role     @relation(fields: [roleId], references: [id])
   roleId       String
   createdAt    DateTime @default(now())

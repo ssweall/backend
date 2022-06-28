@@ -28,6 +28,7 @@ export const updateUser = async (
     },
     data: userInput,
   });
+
   if (user == null) return 'User not found';
   return user;
 };
@@ -51,6 +52,14 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   });
 
   return user;
+};
+export const getUsersByRole = async (roleId: string): Promise<User[]> => {
+  const users = await prismaContext.prisma.user.findMany({
+    where: {
+      roleId: roleId,
+    },
+  });
+  return users;
 };
 
 export const getAllUsers = async (): Promise<User[]> => {
