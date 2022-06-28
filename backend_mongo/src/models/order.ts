@@ -32,7 +32,7 @@ const OrderSchema: Schema = new Schema(
 );
 
 OrderSchema.post<IOrder>('save', function () {
-  logging.info('Mongo', 'Checkout the rrder we just saved: ', this);
+  logging.info('Mongo', 'Checkout the order we just saved: ', this);
 });
 
 export default mongoose.model<IOrder>('Order', OrderSchema);

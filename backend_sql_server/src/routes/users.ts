@@ -13,7 +13,7 @@ import { authenticateJWT } from '../lib/helper/auth';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { getRole } from '../controllers/RoleController';
+import { getAllRoles, getRole } from '../controllers/RoleController';
 import { IRole } from '../interfaces/IRole';
 const dockerstats = require('dockerstats');
 
@@ -49,39 +49,73 @@ router.get('/getInfo/:id', (req: any, res: any) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, roleId } = req.body;
     const user = await getUserByEmail(email);
     if (user != null) {
       const passwordValidate = await bcrypt.compare(password, user.password);
       if (!passwordValidate) {
         res.status(203).json('Invalid password');
       } else {
-        const role = await getRole(user.roleId);
-        // generate an access token
-        const accessToken = jwt.sign(
-          {
-            email: user?.email,
-            name: user?.name,
-            role: role?.name,
-            userId: user?.id,
-          },
-          accessTokenSecret,
-          { expiresIn: '7d' }
-        );
-        const refreshToken = jwt.sign(
-          {
-            email: user?.email,
-            name: user?.name,
-            role: role?.name,
-            userId: user?.id,
-          },
-          refreshTokenSecret
-        );
+        const roles = await getAllRoles();
+        const roleUser = roles.find(r => r.id === user.roleId);
+        if (roleId != undefined) {
+          if (roleUser?.name != roleId) {
+            res
+              .status(203)
+              .json("Vous n'avez pas les droits pour vous connecter.");
+          } else {
+            // generate an access token
+            const accessToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              accessTokenSecret,
+              { expiresIn: '1d' }
+            );
+            const refreshToken = jwt.sign(
+              {
+                email: user?.email,
+                name: user?.name,
+                role: roleUser?.name,
+                userId: user?.id,
+              },
+              refreshTokenSecret
+            );
 
-        res.json({
-          accessToken,
-          refreshToken,
-        });
+            res.json({
+              accessToken,
+              refreshToken,
+            });
+          }
+        } else {
+          const accessToken = jwt.sign(
+            {
+              email: user?.email,
+              name: user?.name,
+              role: roleUser?.name,
+              userId: user?.id,
+            },
+            accessTokenSecret,
+            { expiresIn: '1d' }
+          );
+          const refreshToken = jwt.sign(
+            {
+              email: user?.email,
+              name: user?.name,
+              role: roleUser?.name,
+              userId: user?.id,
+            },
+            refreshTokenSecret
+          );
+
+          res.json({
+            accessToken,
+            refreshToken,
+          });
+        }
       }
     } else {
       res.status(203).send('User not found');
