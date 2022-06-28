@@ -15,7 +15,7 @@ model User {
   name         String
   email        String   @unique
   password     String
-  streetNumber Int?
+  streetNumber String?
   address      String?
   city         String?
   phoneNumber  String?

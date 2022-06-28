@@ -6,7 +6,7 @@ export interface IUser {
   roleId: string;
   password: string;
   address: string;
-  streetNumber: number;
+  streetNumber: string;
   city: string;
   country: string;
   phoneNumber: string;
