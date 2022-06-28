@@ -3,14 +3,15 @@ import mongoose from 'mongoose';
 import Restaurant from '../models/restaurant';
 
 const createRestaurant = (req: Request, res: Response) => {
-  const { name, idRestaurateur, articles, address } = req.body;
-
+  const { name, idRestaurateur, articles, address, picture } = req.body;
+  console.log(req.body);
   const restaurant = new Restaurant({
     _id: new mongoose.Types.ObjectId(),
     name,
     idRestaurateur,
     articles,
     address,
+    picture,
   });
 
   return restaurant
@@ -45,10 +46,10 @@ const getAllRestaurants = (req: Request, res: Response) => {
     });
 };
 
-
 const getAllRestaurantsByRestaurateur = (req: Request, res: Response) => {
-  const {id} = req.params;
-  Restaurant.find({idRestaurateur: id}).populate("articles")
+  const { id } = req.params;
+  Restaurant.find({ idRestaurateur: id })
+    .populate('articles')
     .exec()
     .then(restaurants => {
       return res.status(200).json({
@@ -90,13 +91,14 @@ const getOneRestaurant = (req: Request, res: Response) => {
 //update one restaurant
 const updateRestaurant = (req: Request, res: Response) => {
   const id = req.params.id;
-  const { name, idRestaurateur, articles, address } = req.body;
+  const { name, idRestaurateur, articles, address, picture } = req.body;
 
   Restaurant.findByIdAndUpdate(id, {
     name,
     idRestaurateur,
     articles,
     address,
+    picture,
   })
     .exec()
     .then(restaurant => {

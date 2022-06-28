@@ -12,6 +12,7 @@ const RestaurantSchema: Schema = new Schema(
       ref: 'Article',
     },
     address: { type: String, required: true },
+    picture: { type: String, required: true },
   },
   {
     timestamps: true,
