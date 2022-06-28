@@ -6,6 +6,7 @@ import {
   getFewUsers,
   getUser,
   getUserByEmail,
+  getUsersByRole,
   updateUser,
 } from '../controllers/UserController';
 import { IUser } from '../interfaces/IUser';
@@ -124,8 +125,6 @@ router.post('/create', async (req, res, next) => {
     const user = await createUser(userInput);
     res.json(user);
   } catch (err: any) {
-    console.log(err);
-
     if (err?.meta?.field_name == 'User_roleId_fkey (index)')
       res.json("User's role not found");
     else if (err?.meta?.target == 'User_email_key')
@@ -185,6 +184,15 @@ router.delete('/:id', authenticateJWT, async (req, res, next) => {
     res.json(user);
   } catch (err) {
     res.json('User does not exist');
+  }
+});
+
+router.get('/get/role/:idRoles', authenticateJWT, async (req, res, next) => {
+  try {
+    const usersByRole = await getUsersByRole(req.params.idRoles);
+    res.json(usersByRole);
+  } catch (err) {
+    res.json(err);
   }
 });
 
