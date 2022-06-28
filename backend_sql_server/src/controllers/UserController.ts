@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+import { userInfo } from 'os';
 import { IUser } from '../interfaces/IUser';
 import prismaContext from '../lib/prisma/prismaContext';
 
@@ -22,6 +23,8 @@ export const updateUser = async (
   id: string,
   userInput: IUser
 ): Promise<User | string | null> => {
+  console.log(userInput);
+
   const user = await prismaContext.prisma.user.update({
     where: {
       id: id,
@@ -33,8 +36,23 @@ export const updateUser = async (
   return user;
 };
 
-export const getUser = async (id: string): Promise<User | string | null> => {
+export const getUser = async (id: string): Promise<any> => {
   const user = await prismaContext.prisma.user.findUnique({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      password: false,
+      address: true,
+      streetNumber: true,
+      city: true,
+      country: true,
+      phoneNumber: true,
+      sponsorshipCode: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     where: {
       id: id,
     },
@@ -44,8 +62,23 @@ export const getUser = async (id: string): Promise<User | string | null> => {
   return user;
 };
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (email: string): Promise<any> => {
   const user = await prismaContext.prisma.user.findUnique({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      password: true,
+      address: true,
+      streetNumber: true,
+      city: true,
+      country: true,
+      phoneNumber: true,
+      sponsorshipCode: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     where: {
       email: email,
     },
@@ -53,8 +86,23 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 
   return user;
 };
-export const getUsersByRole = async (roleId: string): Promise<User[]> => {
+export const getUsersByRole = async (roleId: string): Promise<any> => {
   const users = await prismaContext.prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      password: false,
+      address: true,
+      streetNumber: true,
+      city: true,
+      country: true,
+      phoneNumber: true,
+      sponsorshipCode: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     where: {
       roleId: roleId,
     },
@@ -62,8 +110,25 @@ export const getUsersByRole = async (roleId: string): Promise<User[]> => {
   return users;
 };
 
-export const getAllUsers = async (): Promise<User[]> => {
-  const users = await prismaContext.prisma.user.findMany();
+export const getAllUsers = async (): Promise<any> => {
+  const users = await prismaContext.prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      roleId: true,
+      password: false,
+      address: true,
+      streetNumber: true,
+      city: true,
+      country: true,
+      phoneNumber: true,
+      sponsorshipCode: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
   return users;
 };
 
