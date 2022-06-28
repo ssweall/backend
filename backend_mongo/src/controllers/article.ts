@@ -2,8 +2,12 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Article from '../models/article';
 
+// const multer = require('multer');
+import fs from 'fs';
+import path from 'path';
+
 const createArticle = (req: Request, res: Response) => {
-  const { name, type, price, detail, picture } = req.body;
+  const { name, type, price, detail } = req.body;
 
   const article = new Article({
     _id: new mongoose.Types.ObjectId(),
@@ -11,7 +15,12 @@ const createArticle = (req: Request, res: Response) => {
     type,
     price,
     detail,
-    picture,
+    picture: {
+      data: fs.readFileSync(
+        path.join(__dirname + '/uploads/' + req.file.filename)
+      ),
+      contentType: 'image/png',
+    },
   });
 
   return article

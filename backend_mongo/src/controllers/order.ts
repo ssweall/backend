@@ -186,6 +186,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   } = req.body;
 
   Order.findByIdAndUpdate(id, {
@@ -195,6 +198,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   })
     .exec()
     .then(order => {
