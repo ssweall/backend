@@ -52,8 +52,10 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password, roleId } = req.body;
     const user = await getUserByEmail(email);
+
     if (user != null) {
       const passwordValidate = await bcrypt.compare(password, user.password);
+
       if (!passwordValidate) {
         res.status(203).json('Invalid password');
       } else {
@@ -134,7 +136,7 @@ router.post('/create', async (req, res, next) => {
       roleId: req.body.roleId,
       password: req.body.password,
       address: req.body?.address,
-      streetNumber: parseInt(req.body?.streetNumber),
+      streetNumber: req.body?.streetNumber,
       city: req.body?.city,
       country: req.body?.country,
       phoneNumber: req.body?.phoneNumber,
@@ -165,18 +167,33 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 
 router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
-    const userInput: IUser = {
-      name: req.body.name,
-      email: req.body.email,
-      roleId: req.body.roleId,
-      password: req.body.password,
-      address: req.body?.address,
-      streetNumber: parseInt(req.body?.streetNumber),
-      city: req.body?.city,
-      country: req.body?.country,
-      phoneNumber: req.body?.phoneNumber,
-      sponsorshipCode: req.body?.sponsorshipCode,
-    };
+    var userInput: any = {} as any;
+    if (req.body.password != undefined) {
+      userInput = {
+        name: req.body.name,
+        email: req.body.email,
+        roleId: req.body.roleId,
+        password: await bcrypt.hash(req.body?.password, 10),
+        address: req.body?.address,
+        streetNumber: req.body?.streetNumber,
+        city: req.body?.city,
+        country: req.body?.country,
+        phoneNumber: req.body?.phoneNumber,
+        sponsorshipCode: req.body?.sponsorshipCode,
+      };
+    } else {
+      userInput = {
+        name: req.body.name,
+        email: req.body.email,
+        roleId: req.body.roleId,
+        address: req.body?.address,
+        streetNumber: req.body?.streetNumber,
+        city: req.body?.city,
+        country: req.body?.country,
+        phoneNumber: req.body?.phoneNumber,
+        sponsorshipCode: req.body?.sponsorshipCode,
+      };
+    }
 
     const user = await updateUser(req.params.id, userInput);
     res.json(user);
