@@ -10,4 +10,5 @@ export interface IUser {
   city: string;
   country: string;
   phoneNumber: string;
+  sponsorshipCode: string;
 }

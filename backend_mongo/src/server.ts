@@ -66,7 +66,7 @@ router.use((req, res, next) => {
 router.use('/api/articles', articleRoutes);
 router.use('/api/restaurants', restaurantRoutes);
 router.use('/api/orders', orderRoutes);
-router.use('/api/log', logRoutes);
+router.use('/api/logs', logRoutes);
 
 /** Error handling */
 router.use((req, res) => {
