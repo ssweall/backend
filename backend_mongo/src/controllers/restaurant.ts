@@ -49,6 +49,7 @@ const getAllRestaurants = (req: Request, res: Response) => {
 const getAllRestaurantsByRestaurateur = (req: Request, res: Response) => {
   const { id } = req.params;
   Restaurant.find({ idRestaurateur: id })
+    .populate('articles')
     .exec()
     .then(restaurants => {
       return res.status(200).json({
