@@ -158,6 +158,8 @@ const findOneOrder = (req: Request, res: Response) => {
   const { id } = req.params;
 
   Order.findById(id)
+    .populate('idRestaurant')
+    .populate('articles')
     .exec()
     .then(order => {
       if (!order) {
@@ -187,6 +189,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   } = req.body;
 
   Order.findByIdAndUpdate(id, {
@@ -196,6 +201,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   })
     .exec()
     .then(order => {
@@ -221,6 +229,8 @@ const deleteOrder = (req: Request, res: Response) => {
   const id = req.params.id;
 
   Order.findByIdAndRemove(id)
+    .populate('idRestaurant')
+    .populate('articles')
     .exec()
     .then(order => {
       if (!order) {

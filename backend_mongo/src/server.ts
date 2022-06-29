@@ -43,8 +43,8 @@ router.use((req, res, next) => {
 });
 
 /** Parse the body of the request */
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+router.use(bodyParser.json({ limit: '50mb' }));
 
 /** Rules of our API */
 router.use((req, res, next) => {
@@ -78,7 +78,14 @@ router.use((req, res) => {
 });
 
 const httpServer = http.createServer(router);
-
+const options = {
+  /* ... */
+};
+// // eslint-disable-next-line @typescript-eslint/no-var-requires
+// const io = require('socket.io')(httpServer, options);
+// io.on('connection', socket => {
+//   /* ... */
+// });
 httpServer.listen(config.server.port, () =>
   logging.info(
     NAMESPACE,

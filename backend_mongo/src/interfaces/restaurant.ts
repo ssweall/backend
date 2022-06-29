@@ -6,5 +6,6 @@ type IRestaurant = {
   idRestaurateur: string;
   articles: [IArticle['_id']];
   address: string;
+  picture: string;
 } & Document;
 export default IRestaurant;
