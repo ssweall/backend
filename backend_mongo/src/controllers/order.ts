@@ -39,6 +39,7 @@ const createOrder = (req: Request, res: Response) => {
 
 const getAllOrders = (req: Request, res: Response) => {
   Order.find()
+    .populate('articles')
     .exec()
     .then(orders => {
       return res.status(200).json({
