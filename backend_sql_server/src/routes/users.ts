@@ -16,7 +16,6 @@ import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { getAllRoles, getRole } from '../controllers/RoleController';
 import { IRole } from '../interfaces/IRole';
-const dockerstats = require('dockerstats');
 
 const router = express.Router();
 
@@ -26,26 +25,6 @@ const refreshTokenSecret = 'yourrefreshtokensecrethere';
 router.get('/', authenticateJWT, async (req, res, next) => {
   const user = await getAllUsers();
   res.json(user);
-});
-
-router.get('/getInfo/:id', (req: any, res: any) => {
-  const id = req.params.id;
-  dockerstats.dockerContainerStats().then((data: any) => {
-    console.log(data);
-    res.json({
-      '- ID: ': data[0].id,
-      '- Mem usage: ': data[0].memUsage,
-      '- Mem limit: ': data[0].memLimit,
-      '- Mem usage %: ': data[0].memPercent,
-      '- CPU usage %: ': data[0].cpuPercent,
-    });
-    console.log('Docker Container Stats:');
-    console.log('- ID: ' + data[0].id);
-    console.log('- Mem usage: ' + data[0].memUsage);
-    console.log('- Mem limit: ' + data[0].memLimit);
-    console.log('- Mem usage %: ' + data[0].memPercent);
-    console.log('- CPU usage %: ' + data[0].cpuPercent);
-  });
 });
 
 router.post('/login', async (req, res) => {
