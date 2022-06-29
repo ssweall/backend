@@ -143,10 +143,24 @@ router.post('/create', async (req, res, next) => {
       sponsorshipCode: req.body?.sponsorshipCode,
     };
 
-    userInput.password = await bcrypt.hash(userInput.password, 10);
+    if (req.body?.sponsorshipCode != '') {
+      const userRole = await getUserByEmail(userInput.sponsorshipCode);
+      if (userRole?.roleId != req.body.roleId) {
+        res.send(
+          "L'adresse email que vous avez entrée n'appartient pas à un utilisateur de votre role"
+        );
+      } else {
+        userInput.password = await bcrypt.hash(userInput.password, 10);
 
-    const user = await createUser(userInput);
-    res.json(user);
+        const user = await createUser(userInput);
+        res.json(user);
+      }
+    } else {
+      userInput.password = await bcrypt.hash(userInput.password, 10);
+
+      const user = await createUser(userInput);
+      res.json(user);
+    }
   } catch (err: any) {
     if (err?.meta?.field_name == 'User_roleId_fkey (index)')
       res.json("User's role not found");
