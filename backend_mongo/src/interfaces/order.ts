@@ -9,6 +9,9 @@ type IOrder = {
   articles: [IArticle['_id']];
   activeCodeSponsorship: boolean;
   state: state;
+  clientNotified: boolean;
+  restaurantNotified: boolean;
+  livreurNotified: boolean;
 } & Document;
 export default IOrder;
 
