@@ -81,11 +81,11 @@ const httpServer = http.createServer(router);
 const options = {
   /* ... */
 };
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const io = require('socket.io')(httpServer, options);
-io.on('connection', socket => {
-  /* ... */
-});
+// // eslint-disable-next-line @typescript-eslint/no-var-requires
+// const io = require('socket.io')(httpServer, options);
+// io.on('connection', socket => {
+//   /* ... */
+// });
 httpServer.listen(config.server.port, () =>
   logging.info(
     NAMESPACE,
