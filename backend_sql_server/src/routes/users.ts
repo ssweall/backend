@@ -16,6 +16,7 @@ import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { getAllRoles, getRole } from '../controllers/RoleController';
 import { IRole } from '../interfaces/IRole';
+const dockerstats = require('dockerstats');
 
 const router = express.Router();
 
@@ -25,6 +26,26 @@ const refreshTokenSecret = 'yourrefreshtokensecrethere';
 router.get('/', authenticateJWT, async (req, res, next) => {
   const user = await getAllUsers();
   res.json(user);
+});
+
+router.get('/getInfo/:id', (req: any, res: any) => {
+  const id = req.params.id;
+  dockerstats.dockerContainerStats().then((data: any) => {
+    console.log(data);
+    res.json({
+      '- ID: ': data[0].id,
+      '- Mem usage: ': data[0].memUsage,
+      '- Mem limit: ': data[0].memLimit,
+      '- Mem usage %: ': data[0].memPercent,
+      '- CPU usage %: ': data[0].cpuPercent,
+    });
+    console.log('Docker Container Stats:');
+    console.log('- ID: ' + data[0].id);
+    console.log('- Mem usage: ' + data[0].memUsage);
+    console.log('- Mem limit: ' + data[0].memLimit);
+    console.log('- Mem usage %: ' + data[0].memPercent);
+    console.log('- CPU usage %: ' + data[0].cpuPercent);
+  });
 });
 
 router.post('/login', async (req, res) => {
@@ -122,10 +143,24 @@ router.post('/create', async (req, res, next) => {
       sponsorshipCode: req.body?.sponsorshipCode,
     };
 
-    userInput.password = await bcrypt.hash(userInput.password, 10);
+    if (req.body?.sponsorshipCode != '') {
+      const userRole = await getUserByEmail(userInput.sponsorshipCode);
+      if (userRole?.roleId != req.body.roleId) {
+        res.send(
+          "L'adresse email que vous avez entrée n'appartient pas à un utilisateur de votre role"
+        );
+      } else {
+        userInput.password = await bcrypt.hash(userInput.password, 10);
 
-    const user = await createUser(userInput);
-    res.json(user);
+        const user = await createUser(userInput);
+        res.json(user);
+      }
+    } else {
+      userInput.password = await bcrypt.hash(userInput.password, 10);
+
+      const user = await createUser(userInput);
+      res.json(user);
+    }
   } catch (err: any) {
     if (err?.meta?.field_name == 'User_roleId_fkey (index)')
       res.json("User's role not found");

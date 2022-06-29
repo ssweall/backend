@@ -22,6 +22,9 @@ const OrderSchema: Schema = new Schema(
       enum: ['commande', 'preparation', 'livraison', 'prepared'],
       required: true,
     },
+    clientNotified: { type: Boolean, default: false },
+    restaurantNotified: { type: Boolean, default: false },
+    livreurNotified: { type: Boolean, default: false },
   },
   {
     timestamps: true,

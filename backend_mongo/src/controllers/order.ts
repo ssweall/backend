@@ -38,7 +38,8 @@ const createOrder = (req: Request, res: Response) => {
 };
 
 const getAllOrders = (req: Request, res: Response) => {
-  Order.find()
+  Order.find()    .populate('idRestaurant')
+  .populate('articles')
     .exec()
     .then(orders => {
       return res.status(200).json({
@@ -156,7 +157,8 @@ const findAllOrdersByRestaurant = (req: Request, res: Response) => {
 const findOneOrder = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  Order.findById(id)
+  Order.findById(id)    .populate('idRestaurant')
+  .populate('articles')
     .exec()
     .then(order => {
       if (!order) {
@@ -186,6 +188,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   } = req.body;
 
   Order.findByIdAndUpdate(id, {
@@ -195,6 +200,9 @@ const updateOrder = (req: Request, res: Response) => {
     articles,
     activeCodeSponsorship,
     state,
+    clientNotified,
+    restaurantNotified,
+    livreurNotified,
   })
     .exec()
     .then(order => {
@@ -219,7 +227,8 @@ const updateOrder = (req: Request, res: Response) => {
 const deleteOrder = (req: Request, res: Response) => {
   const id = req.params.id;
 
-  Order.findByIdAndRemove(id)
+  Order.findByIdAndRemove(id)    .populate('idRestaurant')
+  .populate('articles')
     .exec()
     .then(order => {
       if (!order) {
