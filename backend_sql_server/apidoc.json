@@ -1,0 +1,8 @@
+{
+  "name": "API documentation",
+  "version": "1.0.0",
+  "description": "API pour utilisateurs et rôles",
+  "template": {
+    "forceLanguage": "fr"
+  }
+}

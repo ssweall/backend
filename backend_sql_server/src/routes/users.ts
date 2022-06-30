@@ -22,28 +22,88 @@ const router = express.Router();
 const accessTokenSecret = 'youraccesstokensecret';
 const refreshTokenSecret = 'yourrefreshtokensecrethere';
 
+/**
+ * @api {get} /users Get all users
+ * @apiGroup Users
+ * @apiSuccess {Object[]} users Users's list
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [    {
+        "id": "cl50s2eq3000301pidyd1tw6w",
+        "name": "matheo",
+        "email": "com@com.com",
+        "roleId": "cl4zlhdr2060201r4ht90posu",
+        "address": "rue des cheveux",
+        "streetNumber": "6",
+        "city": "La rochelle",
+        "country": "France",
+        "phoneNumber": "0666998877",
+        "sponsorshipCode": null,
+        "createdAt": "2022-06-30T08:41:39.339Z",
+        "updatedAt": "2022-06-30T08:41:39.339Z"
+    },
+  {
+        "id": "cl4y8f7qd003201r048lqq7r9",
+        "name": "theo",
+        "email": "theo@test.com",
+        "roleId": "cl4pj9g89000601tfgh82kucg",
+        "address": "",
+        "streetNumber": "",
+        "city": "",
+        "country": "",
+        "phoneNumber": "",
+        "sponsorshipCode": "l@l.l",
+        "createdAt": "2022-06-28T13:56:12.133Z",
+        "updatedAt": "2022-06-28T13:56:12.133Z"
+    }]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 router.get('/', authenticateJWT, async (req, res, next) => {
   const user = await getAllUsers();
   res.json(user);
 });
 
+/**
+ * @api {get} /users/login Login a user
+ * @apiGroup Users
+ * @apiSuccess {String} accessToken Access token for user 
+ * @apiSuccess {String} refreshToken Refresh token for user
+
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvbUBjb20uY29tIiwibmFtZSI6Im1hdGhlbyIsInJvbGUiOiJDb21tZXJjaWFsIiwidXNlcklkIjoiY2w1MHMyZXEzMDAwMzAxcGlkeWQxdHc2dyIsImlhdCI6MTY1NjU3OTA3MywiZXhwIjoxNjU2NjY1NDczfQ.D_XfAvbpVgF5KEwl_hRulTYffeZrYfXgW59rPDXQfpc",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvbUBjb20uY29tIiwibmFtZSI6Im1hdGhlbyIsInJvbGUiOiJDb21tZXJjaWFsIiwidXNlcklkIjoiY2w1MHMyZXEzMDAwMzAxcGlkeWQxdHc2dyIsImlhdCI6MTY1NjU3OTA3M30.vgZcZ_OUHWwdpVKqGO85VN9NdEXXBcT9obi6NU8croY"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 router.post('/login', async (req, res) => {
   try {
-    console.log(req.body);
-
     const { email, password, roleId } = req.body;
     const user = await getUserByEmail(email);
 
     if (user != null) {
       const passwordValidate = await bcrypt.compare(password, user.password);
-      console.log(user.password);
-      console.log(passwordValidate);
 
       if (!passwordValidate) {
         res.status(203).json('Invalid password');
       } else {
-        console.log(user);
-
         const roles = await getAllRoles();
         const roleUser = roles.find(r => r.id === user.roleId);
         if (roleId != undefined) {
@@ -109,15 +169,48 @@ router.post('/login', async (req, res) => {
       res.status(203).send('User not found');
     }
   } catch (err: any) {
-    console.log(err);
-
     res.json(err);
   }
 });
 
-router.post('/create', async (req, res, next) => {
-  console.log(req.body);
+/**
+ * @api {post} /users/create Create a user
+ * @apiGroup Users
+ * @apiSuccess {Object[]} users Users's list
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl50s2eq3000301pidyd1tw6w",
+    "name": "matheo",
+    "email": "com@com.com",
+    "password": "$2b$10$Gw20MQM.GoGMqjiCkbuBpu.0F6LTmu4qnu2y5Co8HuhFmvDZYwbeS",
+    "streetNumber": "6",
+    "address": "1 rue des cheveux",
+    "city": "La rochelle",
+    "phoneNumber": "0666998877",
+    "country": "France",
+    "sponsorshipCode": null,
+    "roleId": "cl4zlhdr2060201r4ht90posu",
+    "createdAt": "2022-06-30T08:41:39.339Z",
+    "updatedAt": "2022-06-30T08:41:39.339Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
+router.post('/create', async (req, res, next) => {
   try {
     const userInput: IUser = {
       name: req.body.name,
@@ -131,7 +224,6 @@ router.post('/create', async (req, res, next) => {
       phoneNumber: req.body?.phoneNumber,
       sponsorshipCode: req.body?.sponsorshipCode,
     };
-    console.log(userInput);
 
     if (req.body?.sponsorshipCode != '') {
       const userRole = await getUserByEmail(userInput.sponsorshipCode);
@@ -159,6 +251,41 @@ router.post('/create', async (req, res, next) => {
     else res.json('Error when creating the user');
   }
 });
+/**
+ * @api {get} /users/:id Get one user
+ * @apiGroup Users
+ * @apiParam {id} id User id
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl4y8f7qd003201r048lqq7r9",
+    "name": "dsf",
+    "email": "jfds.sdf@ds.fds",
+    "roleId": "cl4pj9g89000601tfgh82kucg",
+    "address": "",
+    "streetNumber": "",
+    "city": "",
+    "country": "",
+    "phoneNumber": "",
+    "sponsorshipCode": "l@l.l",
+    "createdAt": "2022-06-28T13:56:12.133Z",
+    "updatedAt": "2022-06-28T13:56:12.133Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
   try {
@@ -168,6 +295,51 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
     res.json(err);
   }
 });
+
+/**
+ * @api {put} /users/:id Update one user
+ * @apiGroup Users
+ * @apiParam {id} id User id
+ * @apiParam {String} name User name
+ * @apiParam {String} email User email
+ * @apiParam {String} streetNumber User street number
+ * @apiParam {String} address User address
+ * @apiParam {String} city User city
+ * @apiParam {String} phoneNumber User phoneNumber
+ * @apiParam {String} country User country
+ * @apiParam {String} sponsorshipCode User sponsorchipCode
+ * @apiParam {String} roleID User role id
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl4y8f7qd003201r048lqq7r9",
+    "name": "dsf",
+    "email": "jfds.sdf@ds.fds",
+    "roleId": "cl4pj9g89000601tfgh82kucg",
+    "address": "",
+    "streetNumber": "",
+    "city": "",
+    "country": "",
+    "phoneNumber": "",
+    "sponsorshipCode": "l@l.l",
+    "createdAt": "2022-06-28T13:56:12.133Z",
+    "updatedAt": "2022-06-28T13:56:12.133Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
@@ -206,6 +378,43 @@ router.put('/:id', authenticateJWT, async (req, res, next) => {
   }
 });
 
+/**
+ * @api {get} /users/:nbr/:skip Get few users
+ * @apiGroup Users
+ * @apiParam {nbr} nbr The number of user to get
+ * @apiParam {skip} the number of user to skip
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl4y8f7qd003201r048lqq7r9",
+    "name": "dsf",
+    "email": "jfds.sdf@ds.fds",
+    "roleId": "cl4pj9g89000601tfgh82kucg",
+    "address": "",
+    "streetNumber": "",
+    "city": "",
+    "country": "",
+    "phoneNumber": "",
+    "sponsorshipCode": "l@l.l",
+    "createdAt": "2022-06-28T13:56:12.133Z",
+    "updatedAt": "2022-06-28T13:56:12.133Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 //get only 10 users
 router.get('/:nbr/:skip', authenticateJWT, async (req, res, next) => {
   try {
@@ -219,6 +428,42 @@ router.get('/:nbr/:skip', authenticateJWT, async (req, res, next) => {
   }
 });
 
+/**
+ * @api {delete} /users/:id Delete one user
+ * @apiGroup Users
+ * @apiParam {id} id User id
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl4y8f7qd003201r048lqq7r9",
+    "name": "dsf",
+    "email": "jfds.sdf@ds.fds",
+    "roleId": "cl4pj9g89000601tfgh82kucg",
+    "address": "",
+    "streetNumber": "",
+    "city": "",
+    "country": "",
+    "phoneNumber": "",
+    "sponsorshipCode": "l@l.l",
+    "createdAt": "2022-06-28T13:56:12.133Z",
+    "updatedAt": "2022-06-28T13:56:12.133Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 router.delete('/:id', authenticateJWT, async (req, res, next) => {
   try {
     const user = await deleteUser(req.params.id);
@@ -228,6 +473,42 @@ router.delete('/:id', authenticateJWT, async (req, res, next) => {
     res.json('User does not exist');
   }
 });
+
+/**
+ * @api {get} /users/get/roles/:idRoles Get all users from a role 
+ * @apiGroup Users
+ * @apiParam {idRoles} idRoles Role id
+ * @apiSuccess {String} users.id User id
+ * @apiSuccess {String} users.name User name
+ * @apiSuccess {String} users.email User email
+ * @apiSuccess {String} users.streetNumber User street number
+ * @apiSuccess {String} users.address User address
+ * @apiSuccess {String} users.city User city
+ * @apiSuccess {String} users.phoneNumber User phoneNumber
+ * @apiSuccess {String} users.country User country
+ * @apiSuccess {String} users.sponsorshipCode User sponsorchipCode
+ * @apiSuccess {String} users.roleID User role id
+ * @apiSuccess {Date} users.updated_at Update's date
+ * @apiSuccess {Date} users.created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    [{
+    "id": "cl4y8f7qd003201r048lqq7r9",
+    "name": "dsf",
+    "email": "jfds.sdf@ds.fds",
+    "roleId": "cl4pj9g89000601tfgh82kucg",
+    "address": "",
+    "streetNumber": "",
+    "city": "",
+    "country": "",
+    "phoneNumber": "",
+    "sponsorshipCode": "l@l.l",
+    "createdAt": "2022-06-28T13:56:12.133Z",
+    "updatedAt": "2022-06-28T13:56:12.133Z"
+}]
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 router.get('/get/role/:idRoles', authenticateJWT, async (req, res, next) => {
   try {
