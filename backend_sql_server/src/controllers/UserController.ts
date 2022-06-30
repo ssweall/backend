@@ -23,8 +23,6 @@ export const updateUser = async (
   id: string,
   userInput: IUser
 ): Promise<User | string | null> => {
-  console.log(userInput);
-
   const user = await prismaContext.prisma.user.update({
     where: {
       id: id,

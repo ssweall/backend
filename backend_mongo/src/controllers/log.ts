@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Log from '../models/log';
 
 const createLog = (req: Request, res: Response) => {
+  console.log(req.body);
   const { type, description } = req.body;
 
   const log = new Log({
@@ -88,9 +89,26 @@ const deleteLog = (req: Request, res: Response) => {
     });
 };
 
+const deleteAllLogs = (req: Request, res: Response) => {
+  Log.remove({})
+    .exec()
+    .then(() => {
+      return res.status(200).json({
+        message: 'Tous les logs ont été supprimés',
+      });
+    })
+    .catch(error => {
+      return res.status(500).json({
+        message: error.message,
+        error,
+      });
+    });
+};
+
 export default {
   createLog,
   getOneLog,
   deleteLog,
   getAllLogs,
+  deleteAllLogs,
 };
