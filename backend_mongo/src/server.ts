@@ -13,6 +13,7 @@ import logRoutes from './routes/log';
 const NAMESPACE = 'Server';
 const router = express();
 
+router.use(express.static('public/apidoc'));
 /** Connect to Mongo */
 mongoose
   .connect(config.mongo.url, config.mongo.options)

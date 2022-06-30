@@ -10,7 +10,7 @@ dotenv.config();
 
 const serverPort = process.env.SERVER_PORT;
 const cors = require('cors');
-app.use(cors({origin: '*'}));
+app.use(cors({ origin: '*' }));
 
 if (!serverPort) {
   console.log('❌ No Server port provided, update your .env file!');
@@ -24,6 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+
+app.use(express.static('doc'));
 
 app.use('/users', require('./routes/users'));
 app.use('/roles', require('./routes/roles'));
